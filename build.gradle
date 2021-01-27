@@ -1,0 +1,38 @@
+plugins {
+    id("com.github.johnrengelman.shadow")
+    id("io.micronaut.application")
+}
+
+group = "info.novatec"
+
+micronaut {
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("micronaut.camunda.bpm.example.*")
+    }
+}
+
+dependencies {
+    implementation(project(":micronaut-camunda-bpm-feature"))
+    runtimeOnly("com.h2database:h2")
+    runtimeOnly("ch.qos.logback:logback-classic")
+
+    // Test
+    testImplementation("io.micronaut:micronaut-http-client")
+
+    // See Compatibility Matrix at https://docs.camunda.org/manual/latest/user-guide/testing/#assertions-version-compatibility
+    // Note: Newer versions of camunda-bpm-assert are not available on Maven Central
+    testImplementation("org.camunda.bpm.assert:camunda-bpm-assert:8.0.0")
+    testImplementation("org.assertj:assertj-core:3.19.0")
+}
+
+application {
+    mainClass.set("info.novatec.micronaut.camunda.bpm.example.Application")
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("1.8")
+    targetCompatibility = JavaVersion.toVersion("1.8")
+}
